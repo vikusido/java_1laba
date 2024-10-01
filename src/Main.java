@@ -19,6 +19,5 @@ public class Main {
         matrix1.setMatrix(1, 0, new Complex(8.0, -1.0));
         matrix1.setMatrix(1, 1, new Complex(4.0, 2.0));
         matrix1.print();
-
     }
 }
