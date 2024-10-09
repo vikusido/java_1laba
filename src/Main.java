@@ -30,6 +30,7 @@ public class Main {
         System.out.println("Second matrix");
         matrix1.print();
         System.out.println();
+
         //set third matrix
         Matrix matrix3 = new Matrix(3, 3);
         matrix3.setMatrix(0, 0, new Complex(1.0, 0.0));
@@ -41,6 +42,7 @@ public class Main {
         matrix3.setMatrix(2, 0, new Complex(7.0, 0.0));
         matrix3.setMatrix(2, 1, new Complex(8.0, 0.0));
         matrix3.setMatrix(2, 2, new Complex(9.0, 0.0));
+
         //calling all operations
         System.out.println("Result of addition matrix");
         matrix.add(matrix1).print();

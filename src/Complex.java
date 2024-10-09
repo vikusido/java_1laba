@@ -33,7 +33,7 @@ public class Complex {
         double denominator = num.real * num.real + num.imag * num.imag;
         double num_real = this.real * num.real + this.imag * num.imag;
         double num_imag = this.imag * num.real - this.real * num.imag;
-        return new Complex(num_real / denominator, num_imag/denominator);
+        return new Complex(num_real / denominator, num_imag / denominator);
     }
 //
 //    public double abs() {
