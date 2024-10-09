@@ -1,18 +1,22 @@
 public class Matrix {
     private Complex[][] matrix;
 
+    //create matrix
     public Matrix(int n, int m) {
         matrix = new Complex[n][m];
     }
 
+    //set matrix with numbers
     public void setMatrix(int i, int j, Complex numbers) {
         matrix[i][j] = numbers;
     }
 
+    //get matrix
     public Complex getMatrix(int n, int m) {
         return matrix[n][m];
     }
 
+    //addition for matrix
     public Matrix add(Matrix matrix2) {
         int n = matrix.length;
         int m = matrix[0].length;
@@ -25,6 +29,7 @@ public class Matrix {
         return new_matrix;
     }
 
+    //subtraction
     public Matrix sub(Matrix matrix2) {
         int n = matrix.length;
         int m = matrix[0].length;
@@ -37,15 +42,17 @@ public class Matrix {
         return new_matrix;
     }
 
+    //multiplication
     public Matrix mult(Matrix matrix2) {
-        int n = matrix.length;
-        int m = matrix[0].length;
-        int l = matrix2.matrix.length;
-        int k = matrix2.matrix[0].length;
+        int n = matrix.length; //rows of first
+        int m = matrix[0].length; //cols of first
+        int l = matrix2.matrix.length; //rows of second
+        int k = matrix2.matrix[0].length; //cols of second
+        //checking if it is possible to mult
         if (m != l) {
             System.out.println("Multiplication is impossible");
         }
-        Matrix new_matrix = new Matrix(n, k);
+        Matrix new_matrix = new Matrix(n, k); //result matrix
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < k; j++) {
                 Complex tmp = new Complex(0, 0);
@@ -58,6 +65,7 @@ public class Matrix {
         return new_matrix;
     }
 
+    //transpose
     public Matrix tran() {
         int n = matrix.length;
         int m = matrix[0].length;
@@ -70,6 +78,51 @@ public class Matrix {
         return new_matrix;
     }
 
+    public Complex det(Matrix matrix2) {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        if (n != m) {
+            System.out.println("The matrix should be square");
+        }
+        Complex[][] tmp_matrix = new Complex[n][n];
+        Complex det = new Complex(1, 0);
+        //finding the biggest number
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                tmp_matrix[i][j] = matrix2.getMatrix(i, j); // Assuming there's a method getElement to access matrix elements
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            if (tmp_matrix[i][i].real == 0 && tmp_matrix[i][i].imag == 0) {
+                boolean check = false;
+                for (int k = i + 1; k < n; k++) {
+                    if (tmp_matrix[k][i].real != 0 || tmp_matrix[k][i].imag != 0) {
+                        Complex[] tmp_row = tmp_matrix[i];
+                        tmp_matrix[i] = tmp_matrix[k];
+                        tmp_matrix[k] = tmp_row;
+                        check = true;
+                        det = det.mult(new Complex(-1, 0));
+                        break;
+                    }
+                }
+                if (!check) return new Complex(0, 0);
+            }
+            //for rows lower the current row
+            for (int k = i + 1; k < n; k++) {
+                Complex factor = tmp_matrix[k][i].div(tmp_matrix[i][i]);
+                for (int j = i; j < n; j++) {
+                    tmp_matrix[k][j] = tmp_matrix[k][j].sub(tmp_matrix[i][j].mult(factor));
+                }
+            }
+        }
+        //det as multiplication of diagonal
+        for (int i = 0; i < n; i++) {
+            det = det.mult(tmp_matrix[i][i]);
+        }
+        return det;
+    }
+
+    //print
     public void print() {
         for (Complex[] n : matrix) {
             for (Complex numbers : n) {
