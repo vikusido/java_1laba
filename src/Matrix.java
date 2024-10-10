@@ -78,7 +78,8 @@ public class Matrix {
         return new_matrix;
     }
 
-    public Complex det(Matrix matrix2) {
+    //determination with Gauss's method
+    public Complex det() {
         int n = matrix.length;
         int m = matrix[0].length;
         if (n != m) {
@@ -89,7 +90,7 @@ public class Matrix {
         //finding the biggest number
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                tmp_matrix[i][j] = matrix2.getMatrix(i, j); // Assuming there's a method getElement to access matrix elements
+                tmp_matrix[i][j] = this.getMatrix(i, j);
             }
         }
         for (int i = 0; i < n; i++) {
@@ -107,7 +108,7 @@ public class Matrix {
                 }
                 if (!check) return new Complex(0, 0);
             }
-            //for rows lower the current row
+            //for rows lower than the current row
             for (int k = i + 1; k < n; k++) {
                 Complex factor = tmp_matrix[k][i].div(tmp_matrix[i][i]);
                 for (int j = i; j < n; j++) {
@@ -115,11 +116,66 @@ public class Matrix {
                 }
             }
         }
-        //det as multiplication of diagonal
+        //det as multiplication of diagonal numbers
         for (int i = 0; i < n; i++) {
             det = det.mult(tmp_matrix[i][i]);
         }
         return det;
+    }
+
+    //inverse matrix with extended matrix Gauss's method
+    public Matrix inv() {
+        int n = matrix.length;
+        int m = matrix[0].length;
+        if (n != m) {
+            System.out.println("The matrix should be square");
+        }
+        Matrix matrix_ext = new Matrix(n, 2 * n);
+        Complex deter = det();
+
+        //set extended matrix
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix_ext.setMatrix(i, j, this.getMatrix(i, j));
+            }
+            for (int j = n; j < 2 * n; j++) {
+                if (i == j - n) {
+                    matrix_ext.setMatrix(i, j, new Complex(1, 0));
+                } else {
+                    matrix_ext.setMatrix(i, j, new Complex(0, 0));
+                }
+            }
+        }
+
+        //method
+        for (int i = 0; i < n; i++) {
+            //checking if the result of determination is zero
+            if (deter.equals(new Complex(0, 0))) {
+                System.out.println("There is no inverse matrix");
+                return null;
+            }
+            Complex det = matrix_ext.getMatrix(i, i);
+            for (int j = 0; j < 2 * n; j++) {
+                matrix_ext.setMatrix(i, j, matrix_ext.getMatrix(i, j).mult(det.conjugated_number()).mult(new Complex(1 / det.mod(), 0)));
+            }
+            for (int j = 0; j < n; j++) {
+                if (i != j) {
+                    Complex factor = matrix_ext.getMatrix(j, i).conjugated_number();
+                    for (int k = 0; k < 2 * n; k++) {
+                        matrix_ext.setMatrix(j, k, matrix_ext.getMatrix(j, k).sub(matrix_ext.getMatrix(i, k).mult(factor)));
+                    }
+                }
+            }
+        }
+
+        //getting inverted matrix
+        Matrix inv_matrix = new Matrix(n, n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                inv_matrix.setMatrix(i, j, matrix_ext.getMatrix(i, j + n));
+            }
+        }
+        return inv_matrix;
     }
 
     //print

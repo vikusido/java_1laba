@@ -35,14 +35,28 @@ public class Complex {
         double num_imag = this.imag * num.real - this.real * num.imag;
         return new Complex(num_real / denominator, num_imag / denominator);
     }
-//
-//    public double abs() {
-//        return Math.sqrt(real * real + imag * imag);
-//    }
-//
-//    public static boolean greater(Complex num1, Complex num2) {
-//        return num1.abs() > num2.abs();
-//    }
+
+    //check if equal
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true; // Сравнение с самим собой
+        }
+        if (obj instanceof Complex) {
+            Complex other = (Complex) obj;
+            return Double.compare(this.real, other.real) == 0 && Double.compare(this.imag, other.imag) == 0;
+        }
+        return false;
+    }
+
+    //getting the conjugated number
+    public Complex conjugated_number() {
+        return new Complex(real, -imag);
+    }
+
+    //modulus squared
+    public double mod() {
+        return real * real + imag * imag;
+    }
 
     //right representation of a complex number
     public String toString() {
